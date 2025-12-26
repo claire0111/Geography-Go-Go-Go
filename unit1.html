@@ -80,14 +80,13 @@
 <body>
 
     <div id="question-container" class="question-card">
-        <h2 id="question-number">問題 1 / 11</h2>
-        <p id="question-text">下列哪一個縣市位在台灣最北端？</p>
+        <h2 id="question-number">問題 1 / 10</h2>
+        <p id="question-text">台灣東部外海是？</p>
 
         <div id="choices" class="choices"></div>
 
         <!-- 拖曳題容器 -->
         <div id="drag-question" class="hidden">
-            <p>將縣市名稱拖曳到正確的位置：</p>
             <div class="drag-container" id="drag-items"></div>
             <div class="drop-container" id="drop-zones"></div>
         </div>
@@ -95,23 +94,22 @@
 
     <script>
         const questions = [
-            { type: 'choice', text: '下列哪一個縣市位在台灣最北端？', options: ['A. 新北市', 'B. 基隆市', 'C. 宜蘭縣', 'D. 台北市'], answer: 'B' },
-            { type: 'choice', text: '台北 101 屬於哪一個行政區？', options: ['A. 新北市', 'B. 桃園市', 'C. 台北市', 'D. 新竹市'], answer: 'C' },
-            { type: 'choice', text: '以下哪一個「不是」直轄市？', options: ['A. 台中市', 'B. 台南市', 'C. 彰化縣', 'D. 高雄市'], answer: 'C' },
-            { type: 'choice', text: '士林夜市位於哪一個城市？', options: ['A. 台北市', 'B. 新北市', 'C. 基隆市', 'D. 桃園市'], answer: 'A' },
-            { type: 'choice', text: '台灣目前共有幾個直轄市？', options: ['A. 4 個', 'B. 5 個', 'C. 6 個', 'D. 7 個'], answer: 'C' },
-            { type: 'choice', text: '下列哪一個配對是正確的？', options: ['A. 台南市－鳳梨酥', 'B. 新竹市－貢丸', 'C. 花蓮縣－太陽餅', 'D. 台中市－牛舌餅'], answer: 'B' },
-            { type: 'choice', text: '從台北市沿著西部往南行，哪一個城市會先經過？', options: ['A. 台中市', 'B. 高雄市', 'C. 新竹市', 'D. 台南市'], answer: 'C' },
-            { type: 'choice', text: '澎湖縣屬於下列哪一類行政區？', options: ['A. 直轄市', 'B. 市', 'C. 縣', 'D. 鄉'], answer: 'C' },
-            { type: 'choice', text: '哪一個縣市位在台灣東部？', options: ['A. 嘉義市', 'B. 台中市', 'C. 宜蘭縣', 'D. 雲林縣'], answer: 'C' },
-            { type: 'choice', text: '以下哪一個是「縣轄市」？', options: ['A. 新北市', 'B. 台北市', 'C. 桃園市', 'D. 竹北市'], answer: 'D' },
+            { type: 'choice', text: '台灣東部外海是？', options: ['A. 台灣海峽', 'B. 巴士海峽', 'C. 太平洋', 'D. 三峽'], answer: 'C' },
+            { type: 'choice', text: '離金門最近的國家是以下哪一個？', options: ['A. 日本', 'B. 中國', 'C. 韓國', 'D. 美國'], answer: 'B' },
+            { type: 'choice', text: '位於台灣與中國之間的海峽叫什麼？', options: ['A. 台灣海峽', 'B. 麻六甲海峽', 'C. 巴士海峽', 'D. 東海'], answer: 'A' },
+            { type: 'choice', text: '南海中的太平島目前由哪一個國家實際控制？', options: ['A. 越南', 'B. 菲律賓', 'C. 馬來西亞', 'D. 台灣'], answer: 'D' },
+            { type: 'choice', text: '下列哪個國家與台灣沒有直接重疊的專屬經濟海域主權爭議？', options: ['A. 韓國', 'B. 日本', 'C. 中國', 'D. 菲律賓'], answer: 'A' },
+            { type: 'choice', text: '從高雄搭船往南，最可能先抵達哪個國家', options: ['A. 印尼', 'B. 泰國', 'C. 菲律賓', 'D. 緬甸'], answer: 'C' },
+            { type: 'choice', text: '台灣北方最近的鄰國為？', options: ['A. 日本', 'B. 俄羅斯', 'C. 北韓', 'D. 加拿大'], answer: 'A' },
+            { type: 'choice', text: '所謂「第一島鏈」中，台灣位於哪兩國之間？', options: ['A. 中國、日本', 'B. 日本、菲律賓', 'C. 日本、韓國', 'D. 中國、韓國'], answer: 'B' },
+            { type: 'choice', text: '貨船從高雄港出發前往新加坡，必經哪個海域與海峽？', options: ['A. 東海、台灣海峽', 'B. 太平洋、巴士海峽', 'C. 南海、巴士海峽', 'D. 南海、麻六甲海峽'], answer: 'D' },
             // 拖曳題示例
             {
                 type: 'drag',
-                text: '請將縣市名稱拖到正確區域',
-                dragItems: ['基隆', '台北', '新北'],
-                dropZones: ['北部1', '北部2', '北部3'],
-                answers: { '基隆': '北部1', '台北': '北部2', '新北': '北部3' }
+                text: '將台灣周遭海域名稱拖曳到正確的位置：',
+                dragItems: ['巴士海峽', '台灣海峽', '東海'],
+                dropZones: ['北', '南', '西'],
+                answers: { '東海': '北', '巴士海峽': '南', '台灣海峽': '西' }
             }
         ];
 
