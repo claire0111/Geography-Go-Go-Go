@@ -3,28 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>選擇單元</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
-        body {
+        html, body {
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* 背景圖片 */
         .bg {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background-image: url("img/unit.png");
+            width: 100vw;
+            height: 100vh;
+            background-image: url("img/Select_Unit.png");
             background-size: cover;
             background-position: center;
+            position: relative;
         }
 
-        /* 左側內容 */
-        .left-content {
+        /* 右側內容 */
+        .right-content {
             position: absolute;
-            left: 8%;
-            top: 35%;
+            right: 8%;
+            top: 50%;
             transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* 按鈕間距 */
+            align-items: center;
         }
 
         .title {
@@ -34,25 +47,37 @@
             margin-bottom: 30px;
         }
 
-        .start-btn {
-            font-size: 32px;
-            padding: 15px 50px;
-            border: none;
+        /* 按鈕樣式 */
+        .unit-btn {
+            font-size: 28px;
+            padding: 15px 60px;
             background-color: #f5eddc;
-            cursor: pointer;
-            border-radius: 8px;
+            border: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            width: 550px;
         }
 
-        .start-btn:hover {
+        .unit-btn:hover {
             background-color: #e6dcc6;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
     <div class="bg">
-        
+        <div class="right-content text-center">
+            <div class="title">選擇單元</div>
+            
+            <!-- 三個單元選擇按鈕 -->
+            <button class="unit-btn btn btn-lg" onclick="location.href='unit1.html'">單元 1：台灣周遭海域與鄰國</button>
+            <button class="unit-btn btn btn-lg" onclick="location.href='unit2.html'">單元 2：台灣地形與氣候</button>
+            <button class="unit-btn btn btn-lg" onclick="location.href='unit3.html'">單元 3：台灣行政區與城市特色</button>
+        </div>
     </div>
+
+
 
 </body>
 </html>

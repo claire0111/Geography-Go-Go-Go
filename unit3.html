@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>台灣地理闖關遊戲 - 拖曳題目</title>
+<style>
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    .question-card {
+        background-color: #fff;
+        padding: 30px;
+        margin: 50px auto;
+        border-radius: 15px;
+        max-width: 900px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    h2 { margin-top:0; }
+
+    .choices button {
+        display: block;
+        margin: 10px 0;
+        padding: 15px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        border: none;
+        background-color: #f5eddc;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .choices button:hover {
+        background-color: #e6dcc6;
+        transform: scale(1.05);
+    }
+
+    /* 拖曳題 */
+    .drag-container, .drop-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .draggable {
+        padding: 10px 20px;
+        background-color: #f5eddc;
+        border-radius: 8px;
+        cursor: grab;
+        user-select: none;
+    }
+
+    .drop-zone {
+        width: 120px;
+        height: 50px;
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+
+    .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="question-container" class="question-card">
+    <h2 id="question-number">問題 1 / 11</h2>
+    <p id="question-text">下列哪一個縣市位在台灣最北端？</p>
+
+    <div id="choices" class="choices"></div>
+
+    <!-- 拖曳題容器 -->
+    <div id="drag-question" class="hidden">
+        <p>將縣市名稱拖曳到正確的位置：</p>
+        <div class="drag-container" id="drag-items"></div>
+        <div class="drop-container" id="drop-zones"></div>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { type:'choice', text:'下列哪一個縣市位在台灣最北端？', options:['A. 新北市','B. 基隆市','C. 宜蘭縣','D. 台北市'], answer:'B' },
+    { type:'choice', text:'台北 101 屬於哪一個行政區？', options:['A. 新北市','B. 桃園市','C. 台北市','D. 新竹市'], answer:'C' },
+    { type:'choice', text:'以下哪一個「不是」直轄市？', options:['A. 台中市','B. 台南市','C. 彰化縣','D. 高雄市'], answer:'C' },
+    { type:'choice', text:'士林夜市位於哪一個城市？', options:['A. 台北市','B. 新北市','C. 基隆市','D. 桃園市'], answer:'A' },
+    { type:'choice', text:'台灣目前共有幾個直轄市？', options:['A. 4 個','B. 5 個','C. 6 個','D. 7 個'], answer:'C' },
+    { type:'choice', text:'下列哪一個配對是正確的？', options:['A. 台南市－鳳梨酥','B. 新竹市－貢丸','C. 花蓮縣－太陽餅','D. 台中市－牛舌餅'], answer:'B' },
+    { type:'choice', text:'從台北市沿著西部往南行，哪一個城市會先經過？', options:['A. 台中市','B. 高雄市','C. 新竹市','D. 台南市'], answer:'C' },
+    { type:'choice', text:'澎湖縣屬於下列哪一類行政區？', options:['A. 直轄市','B. 市','C. 縣','D. 鄉'], answer:'C' },
+    { type:'choice', text:'哪一個縣市位在台灣東部？', options:['A. 嘉義市','B. 台中市','C. 宜蘭縣','D. 雲林縣'], answer:'C' },
+    { type:'choice', text:'以下哪一個是「縣轄市」？', options:['A. 新北市','B. 台北市','C. 桃園市','D. 竹北市'], answer:'D' },
+    // 拖曳題示例
+    { 
+        type:'drag', 
+        text:'請將縣市名稱拖到正確區域',
+        dragItems: ['基隆', '台北', '新北'],
+        dropZones: ['北部1', '北部2', '北部3'],
+        answers: { '基隆':'北部1', '台北':'北部2', '新北':'北部3' }
+    }
+];
+
+let currentQuestion = 0;
+
+function loadQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('question-number').innerText = `問題 ${currentQuestion+1} / ${questions.length}`;
+    document.getElementById('question-text').innerText = q.text;
+
+    const choicesDiv = document.getElementById('choices');
+    const dragDiv = document.getElementById('drag-question');
+
+    if(q.type==='choice'){
+        dragDiv.classList.add('hidden');
+        choicesDiv.classList.remove('hidden');
+        choicesDiv.innerHTML = '';
+        q.options.forEach(option=>{
+            const btn = document.createElement('button');
+            btn.innerText = option;
+            btn.onclick = ()=>checkChoice(option.charAt(0));
+            btn.className='choice-btn';
+            choicesDiv.appendChild(btn);
+        });
+    } else if(q.type==='drag'){
+        choicesDiv.classList.add('hidden');
+        dragDiv.classList.remove('hidden');
+        const dragContainer = document.getElementById('drag-items');
+        const dropContainer = document.getElementById('drop-zones');
+        dragContainer.innerHTML = '';
+        dropContainer.innerHTML = '';
+
+        // 建立拖曳項目
+        q.dragItems.forEach(item=>{
+            const div = document.createElement('div');
+            div.className='draggable';
+            div.draggable=true;
+            div.id='drag-'+item;
+            div.innerText=item;
+            div.addEventListener('dragstart', dragStart);
+            dragContainer.appendChild(div);
+        });
+
+        // 建立放置區
+        q.dropZones.forEach(zone=>{
+            const div = document.createElement('div');
+            div.className='drop-zone';
+            div.id='drop-'+zone;
+            div.addEventListener('dragover', dragOver);
+            div.addEventListener('drop', drop);
+            div.innerText=zone;
+            dropContainer.appendChild(div);
+        });
+    }
+}
+
+// ===== 拖曳事件 =====
+let draggedItem = null;
+
+function dragStart(e){
+    draggedItem = e.target.id;
+}
+
+function dragOver(e){
+    e.preventDefault();
+}
+
+function drop(e){
+    e.preventDefault();
+    const dropId = e.target.id;
+    const itemName = draggedItem.replace('drag-','');
+    const dropZoneName = dropId.replace('drop-','');
+    const q = questions[currentQuestion];
+    if(q.answers[itemName] === dropZoneName){
+        e.target.innerText = itemName;
+        document.getElementById(draggedItem).style.display='none';
+        // 檢查是否所有項目都放對
+        let allDone = q.dragItems.every(it=>{
+            const dz = q.answers[it];
+            return document.getElementById('drop-'+dz).innerText === it;
+        });
+        if(allDone){
+            alert('答對了！進入下一題');
+            nextQuestion();
+        }
+    } else{
+        alert('答錯了，請再試一次！');
+    }
+}
+
+// ===== 選擇題檢查 =====
+function checkChoice(ans){
+    if(ans === questions[currentQuestion].answer){
+        alert('答對了！');
+        nextQuestion();
+    } else{
+        alert('答錯了，請再試一次！');
+    }
+}
+
+function nextQuestion(){
+    currentQuestion++;
+    if(currentQuestion < questions.length){
+        loadQuestion();
+    } else{
+        alert('恭喜完成所有題目！');
+    }
+}
+
+// 初始載入
+loadQuestion();
+
+</script>
+</body>
+</html>
