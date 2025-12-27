@@ -53,22 +53,52 @@
         }
 
         .draggable {
-            padding: 10px 20px;
+            width: 140px;
+            margin: 10px 0;
+            padding: 15px 30px;
             background-color: #f5eddc;
-            border-radius: 8px;
+            font-size: 20px;
+            border-radius: 10px;
             cursor: grab;
             user-select: none;
+            box-shadow: inset 0 0 0 1px #e2d7bf;
         }
 
+
         .drop-zone {
-            width: 120px;
-            height: 50px;
-            border: 2px dashed #ccc;
+            width: 140px;
+            height: 60px;
+            margin: 10px 0;
+            border: 2px dashed #bfbfbf;
             border-radius: 10px;
+            background-color: #fafafa;
+            font-size: 20px;
+            font-weight: bold;
+            color: #555;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+        }
+
+
+        .drag-layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .drag-left {
+            flex: 1;
+        }
+
+        .drag-right {
+            width: 220px;
+        }
+
+        .map-img {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
         }
 
         .hidden {
@@ -85,31 +115,99 @@
 
         <div id="choices" class="choices"></div>
 
-        <!-- 拖曳題容器 -->
-        <div id="drag-question" class="hidden">
-            <div class="drag-container" id="drag-items"></div>
-            <div class="drop-container" id="drop-zones"></div>
+        <div id="drag-question" class="hidden drag-layout">
+            <!-- 左邊：拖曳題 -->
+            <div class="drag-left">
+                <div id="drag-items"></div>
+                <hr>
+                <div id="drop-zones"></div>
+            </div>
+
+            <!-- 右邊：地圖圖片 -->
+            <div class="drag-right">
+                <img src="img/map.png" alt="台灣周遭海域圖" class="map-img">
+            </div>
         </div>
+        <div id="hint" class="hint hidden"></div>
+
     </div>
 
     <script>
         const questions = [
-            { type: 'choice', text: '台灣東部外海是？', options: ['A. 台灣海峽', 'B. 巴士海峽', 'C. 太平洋', 'D. 三峽'], answer: 'C' },
-            { type: 'choice', text: '離金門最近的國家是以下哪一個？', options: ['A. 日本', 'B. 中國', 'C. 韓國', 'D. 美國'], answer: 'B' },
-            { type: 'choice', text: '位於台灣與中國之間的海峽叫什麼？', options: ['A. 台灣海峽', 'B. 麻六甲海峽', 'C. 巴士海峽', 'D. 東海'], answer: 'A' },
-            { type: 'choice', text: '南海中的太平島目前由哪一個國家實際控制？', options: ['A. 越南', 'B. 菲律賓', 'C. 馬來西亞', 'D. 台灣'], answer: 'D' },
-            { type: 'choice', text: '下列哪個國家與台灣沒有直接重疊的專屬經濟海域主權爭議？', options: ['A. 韓國', 'B. 日本', 'C. 中國', 'D. 菲律賓'], answer: 'A' },
-            { type: 'choice', text: '從高雄搭船往南，最可能先抵達哪個國家', options: ['A. 印尼', 'B. 泰國', 'C. 菲律賓', 'D. 緬甸'], answer: 'C' },
-            { type: 'choice', text: '台灣北方最近的鄰國為？', options: ['A. 日本', 'B. 俄羅斯', 'C. 北韓', 'D. 加拿大'], answer: 'A' },
-            { type: 'choice', text: '所謂「第一島鏈」中，台灣位於哪兩國之間？', options: ['A. 中國、日本', 'B. 日本、菲律賓', 'C. 日本、韓國', 'D. 中國、韓國'], answer: 'B' },
-            { type: 'choice', text: '貨船從高雄港出發前往新加坡，必經哪個海域與海峽？', options: ['A. 東海、台灣海峽', 'B. 太平洋、巴士海峽', 'C. 南海、巴士海峽', 'D. 南海、麻六甲海峽'], answer: 'D' },
-            // 拖曳題示例
+            {
+                type: 'choice',
+                text: '台灣東部外海是？',
+                options: ['A. 台灣海峽', 'B. 巴士海峽', 'C. 太平洋', 'D. 三峽'],
+                answer: 'C',
+                hint: '台灣東邊面向的是世界上最大的海洋 🌊'
+            },
+            {
+                type: 'choice',
+                text: '離金門最近的國家是以下哪一個？',
+                options: ['A. 日本', 'B. 中國', 'C. 韓國', 'D. 美國'],
+                answer: 'B',
+                hint: '金門距離廈門非常近'
+            },
+            {
+                type: 'choice',
+                text: '位於台灣與中國之間的海峽叫什麼？',
+                options: ['A. 台灣海峽', 'B. 麻六甲海峽', 'C. 巴士海峽', 'D. 東海'],
+                answer: 'A',
+                hint: '名稱就直接用「台灣」命名'
+            },
+            {
+                type: 'choice',
+                text: '南海中的太平島目前由哪一個國家實際控制？',
+                options: ['A. 越南', 'B. 菲律賓', 'C. 馬來西亞', 'D. 台灣'],
+                answer: 'D',
+                hint: '目前駐軍與行政管理來自台灣'
+            },
+            {
+                type: 'choice',
+                text: '下列哪個國家與台灣沒有直接重疊的專屬經濟海域主權爭議？',
+                options: ['A. 韓國', 'B. 日本', 'C. 中國', 'D. 菲律賓'],
+                answer: 'A',
+                hint: '想想哪些國家距離台灣比較遠'
+            },
+            {
+                type: 'choice',
+                text: '從高雄搭船往南，最可能先抵達哪個國家？',
+                options: ['A. 印尼', 'B. 泰國', 'C. 菲律賓', 'D. 緬甸'],
+                answer: 'C',
+                hint: '台灣正南方最近的群島國家'
+            },
+            {
+                type: 'choice',
+                text: '台灣北方最近的鄰國為？',
+                options: ['A. 日本', 'B. 俄羅斯', 'C. 北韓', 'D. 加拿大'],
+                answer: 'A',
+                hint: '沖繩就在台灣北方'
+            },
+            {
+                type: 'choice',
+                text: '所謂「第一島鏈」中，台灣位於哪兩國之間？',
+                options: ['A. 中國、日本', 'B. 日本、菲律賓', 'C. 日本、韓國', 'D. 中國、韓國'],
+                answer: 'B',
+                hint: '台灣南北兩側分別是哪兩個島國'
+            },
+            {
+                type: 'choice',
+                text: '貨船從高雄港出發前往新加坡，必經哪個海域與海峽？',
+                options: ['A. 東海、台灣海峽', 'B. 太平洋、巴士海峽', 'C. 南海、巴士海峽', 'D. 南海、麻六甲海峽'],
+                answer: 'D',
+                hint: '全球最繁忙的海上通道之一'
+            },
             {
                 type: 'drag',
                 text: '將台灣周遭海域名稱拖曳到正確的位置：',
                 dragItems: ['巴士海峽', '台灣海峽', '東海'],
                 dropZones: ['北', '南', '西'],
-                answers: { '東海': '北', '巴士海峽': '南', '台灣海峽': '西' }
+                answers: {
+                    '東海': '北',
+                    '巴士海峽': '南',
+                    '台灣海峽': '西'
+                },
+                hint: '看看旁邊圖片的東南西北，再想想!'
             }
         ];
 
@@ -183,30 +281,35 @@
             const itemName = draggedItem.replace('drag-', '');
             const dropZoneName = dropId.replace('drop-', '');
             const q = questions[currentQuestion];
+
             if (q.answers[itemName] === dropZoneName) {
                 e.target.innerText = itemName;
                 document.getElementById(draggedItem).style.display = 'none';
-                // 檢查是否所有項目都放對
+
+                // 檢查是否全部完成
                 let allDone = q.dragItems.every(it => {
                     const dz = q.answers[it];
                     return document.getElementById('drop-' + dz).innerText === it;
                 });
+
                 if (allDone) {
                     alert('答對了！進入下一題');
                     nextQuestion();
                 }
             } else {
-                alert('答錯了，請再試一次！');
+                alert('答錯了！\n\n提示：' + q.hint);
             }
         }
 
+
         // ===== 選擇題檢查 =====
         function checkChoice(ans) {
-            if (ans === questions[currentQuestion].answer) {
+            const q = questions[currentQuestion];
+            if (ans === q.answer) {
                 alert('答對了！');
                 nextQuestion();
             } else {
-                alert('答錯了，請再試一次！');
+                alert('答錯了！\n\n' + q.hint);
             }
         }
 
@@ -222,7 +325,6 @@
 
         // 初始載入
         loadQuestion();
-
     </script>
 </body>
 

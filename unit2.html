@@ -84,29 +84,73 @@
     </div>
 
     <script>
-        const questions = [
-            { type: 'choice', text: '臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？', options: ['A. 平原', 'B. 臺地', 'C. 盆地', 'D. 高原'], answer: 'D' },
-            { type: 'choice', text: '請依據地形高度由高至低，排列下列地形：「丘陵、平原、山地」。', options: ['A. 平原→丘陵→山地', 'B. 丘陵→山地→平原', 'C. 山地→丘陵→平原', 'D. 山地→平原→丘陵'], answer: 'C' },
-            { type: 'choice', text: '改變地表風貌的力量可以分為內營力與外營力，下列何者屬於內營力作用？', options: ['A. 河川堆積形成沙洲', 'B. 板塊擠壓形成高山', 'C. 海水侵蝕成海蝕洞', 'D. 河川侵蝕形成峽谷'], answer: 'B' },
-            { type: 'choice', text: '花東縱谷平原位在兩座山脈中間的，因四季不同的風情而吸引不少人前往，請問花東縱谷平原兩側的山脈分別為何？', options: ['A. 雪山山脈、中央山脈', 'B. 中央山脈、海岸山脈', 'C. 阿里山山脈、中央山脈', 'D. 玉山山脈、中央山脈'], answer: 'B' },
-            { type: 'choice', text: '天氣和氣候最大的不同是：天氣是指短時間內的天氣狀態，而氣候則是大氣長時間的平均狀態。下列何者是針對氣候的敘述？', options: ['A. 今天午後氣溫高，對流旺盛，可能會下西北雨', 'B. 東北季風增強，帶來的水氣讓明天北部出現局部陣雨', 'C. 西伯利亞高壓南下，未來三天都可能出現10℃以下低溫', 'D. 一般來說，臺灣的降雨集中在夏季，愈往中南部愈明顯'], answer: 'D' },
-            { type: 'choice', text: '臺灣某處海岸受到風力、波浪、潮汐和海流等營力的長期作用下，再加上河川輸沙銳減與地層下陷的影響，導致海岸地形有明顯的變遷。該處海岸在 10 年內最可能發生下列哪種變遷現象？', options: ['A. 海階緩慢上升', 'B. 珊瑚礁海岸退縮', 'C. 沙灘面積逐漸縮小', 'D. 海蝕平臺逐年縮小'], answer: 'C' },
+        const questions = [{
+                type: 'choice',
+                text: '臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？',
+                options: ['A. 平原', 'B. 臺地', 'C. 盆地', 'D. 高原'],
+                answer: 'D',
+                hint: '提示：臺灣常見的地形有山地、丘陵、平原與盆地，注意哪個名稱不屬於臺灣地形分類。'
+            },
+            {
+                type: 'choice',
+                text: '請依據地形高度由高至低，排列下列地形：「丘陵、平原、山地」。',
+                options: ['A. 平原→丘陵→山地', 'B. 丘陵→山地→平原', 'C. 山地→丘陵→平原', 'D. 山地→平原→丘陵'],
+                answer: 'C',
+                hint: '提示：先想「最高、次高、最低」的地形，再依序排列。'
+            },
+            {
+                type: 'choice',
+                text: '改變地表風貌的力量可以分為內營力與外營力，下列何者屬於內營力作用？',
+                options: ['A. 河川堆積形成沙洲', 'B. 板塊擠壓形成高山', 'C. 海水侵蝕成海蝕洞', 'D. 河川侵蝕形成峽谷'],
+                answer: 'B',
+                hint: '提示：內營力來自地球內部，與板塊或地殼運動有關。'
+            },
+            {
+                type: 'choice',
+                text: '花東縱谷平原位在兩座山脈中間的，因四季不同的風情而吸引不少人前往，請問花東縱谷平原兩側的山脈分別為何？',
+                options: ['A. 雪山山脈、中央山脈', 'B. 中央山脈、海岸山脈', 'C. 阿里山山脈、中央山脈', 'D. 玉山山脈、中央山脈'],
+                answer: 'B',
+                hint: '提示：花東縱谷位於臺灣東部，夾在一條內陸山脈與一條靠海的山脈之間。'
+            },
+            {
+                type: 'choice',
+                text: '天氣和氣候最大的不同是：天氣是指短時間內的天氣狀態，而氣候則是大氣長時間的平均狀態。下列何者是針對氣候的敘述？',
+                options: ['A. 今天午後氣溫高，對流旺盛，可能會下西北雨', 'B. 東北季風增強，帶來的水氣讓明天北部出現局部陣雨', 'C. 西伯利亞高壓南下，未來三天都可能出現10℃以下低溫', 'D. 一般來說，臺灣的降雨集中在夏季，愈往中南部愈明顯'],
+                answer: 'D',
+                hint: '提示：氣候是長時間的平均狀態，不是某一天或幾天的天氣。'
+            },
+            {
+                type: 'choice',
+                text: '臺灣某處海岸受到風力、波浪、潮汐和海流等營力的長期作用下，再加上河川輸沙銳減與地層下陷的影響，導致海岸地形有明顯的變遷。該處海岸在 10 年內最可能發生下列哪種變遷現象？',
+                options: ['A. 海階緩慢上升', 'B. 珊瑚礁海岸退縮', 'C. 沙灘面積逐漸縮小', 'D. 海蝕平臺逐年縮小'],
+                answer: 'C',
+                hint: '提示：河川輸沙減少與地層下陷，通常會造成海岸退縮。'
+            },
             {
                 type: 'fill',
                 text: '寒流來襲的季節為【　】季。',
-                answer: '冬'
+                answer: '冬',
+                hint: '提示：寒流通常來自北方大陸冷空氣，最容易出現在一年中氣溫最低的季節。'
             },
             {
                 type: 'fill2',
                 text: '臺灣常有豪雨發生的季節是 5、6 月的【　】季和 7～9 月的【　】季。',
-                answers: ['梅雨', '颱風']
+                answers: ['梅雨', '颱風'],
+                hint: '提示：5、6 月與鋒面有關，7～9 月則常受到熱帶性低氣壓影響，請分別想想這兩種天氣現象的名稱。'
             },
             {
                 type: 'fill2',
                 text: '「颱風」侵襲臺灣的季節為【　】季和【　】季。',
-                answers: ['夏', '秋']
+                answers: ['夏', '秋'],
+                hint: '提示：颱風形成於海水溫度較高的時期，主要集中在一年中較溫暖的季節。'
             },
-            { type: 'choice', text: '從這張等高線地圖來看，可以推測這是哪一種地形呢？', options: ['A. 平原', 'B. 盆地', 'C. 丘陵', 'D. 高山'], answer: 'D' }
+            {
+                type: 'choice',
+                text: '從這張等高線地圖來看，可以推測這是哪一種地形呢？',
+                options: ['A. 平原', 'B. 盆地', 'C. 丘陵', 'D. 高山'],
+                answer: 'D',
+                hint: '提示：等高線分布密集代表坡度陡、地勢起伏大，請觀察是否符合低平或起伏明顯的地形特徵。'
+            }
         ];
 
         let currentQuestion = 0;
@@ -161,36 +205,37 @@
 
         function checkFill() {
             const userAns = document.getElementById('fill-input').value.trim();
-            const correctAns = questions[currentQuestion].answer;
+            const q = questions[currentQuestion];
 
-            if (userAns === correctAns) {
+            if (userAns === q.answer) {
                 alert('答對了！');
                 nextQuestion();
             } else {
-                alert('答錯了，請再試一次！');
+                alert('答錯了！\n\n' + q.hint);
             }
         }
 
         function checkFill2() {
             const ans1 = document.getElementById('fill2-input1').value.trim();
             const ans2 = document.getElementById('fill2-input2').value.trim();
-            const correct = questions[currentQuestion].answers;
+            const q = questions[currentQuestion];
 
-            if (ans1 === correct[0] && ans2 === correct[1]) {
+            if (ans1 === q.answers[0] && ans2 === q.answers[1]) {
                 alert('答對了！');
                 nextQuestion();
             } else {
-                alert('答錯了，請再試一次！');
+                alert('答錯了！\n\n' + q.hint);
             }
         }
 
         // ===== 選擇題檢查 =====
         function checkChoice(ans) {
-            if (ans === questions[currentQuestion].answer) {
+            const q = questions[currentQuestion];
+            if (ans === q.answer) {
                 alert('答對了！');
                 nextQuestion();
             } else {
-                alert('答錯了，請再試一次！');
+                alert('答錯了！\n\n' + q.hint);
             }
         }
 
@@ -206,7 +251,6 @@
 
         // 初始載入
         loadQuestion();
-
     </script>
 </body>
 
