@@ -1,211 +1,213 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-<meta charset="UTF-8">
-<title>台灣地理闖關遊戲 - 拖曳題目</title>
-<style>
-    body {
-        margin: 0;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        background-image: url("img/ans.png");
-        background-color: #f5f5f5;
-    }
-
-    .question-card {
-        background-color: #fff;
-        padding: 30px;
-        margin: 50px auto;
-        border-radius: 15px;
-        max-width: 900px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    h2 { margin-top:0; }
-
-    .choices button {
-        display: block;
-        margin: 10px 0;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        border: none;
-        background-color: #f5eddc;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .choices button:hover {
-        background-color: #e6dcc6;
-        transform: scale(1.05);
-    }
-
-    .hidden { display: none; }
-</style>
-</head>
-<body>
-
-<div id="question-container" class="question-card">
-    <h2 id="question-number">問題 1 / 11</h2>
-    <p id="question-text">臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？</p>
-
-    <!-- 題目圖片 -->
-    <div id="question-image" class="hidden" style="text-align:center; margin:20px 0;">
-        <img id="q-img" src="" alt="題目圖片" style="max-width:100%; height:auto;">
-    </div>
-
-    <div id="choices" class="choices"></div>
-
-    <!-- 填充題 -->
-    <div id="fill-question" class="hidden">
-        <input type="text" id="fill-input" placeholder="請輸入答案"
-            style="font-size:20px; padding:10px; width:200px;">
-        <br><br>
-        <button onclick="checkFill()"
-                style="font-size:18px; padding:10px 30px; border-radius:10px;">
-            確認
-        </button>
-    </div>
-
-    <!-- 雙填充題 -->
-    <div id="fill2-question" class="hidden">
-        <input type="text" id="fill2-input1" placeholder="第一個答案"
-            style="font-size:20px; padding:10px; width:200px;">
-        <br><br>
-        <input type="text" id="fill2-input2" placeholder="第二個答案"
-            style="font-size:20px; padding:10px; width:200px;">
-        <br><br>
-        <button onclick="checkFill2()"
-                style="font-size:18px; padding:10px 30px; border-radius:10px;">
-            確認
-        </button>
-    </div>
-</div>
-
-<script>
-const questions = [
-    { type:'choice', text:'臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？', options:['A. 平原','B. 臺地','C. 盆地','D. 高原'], answer:'D' },
-    { type:'choice', text:'請依據地形高度由高至低，排列下列地形：「丘陵、平原、山地」。', options:['A. 平原→丘陵→山地','B. 丘陵→山地→平原','C. 山地→丘陵→平原','D. 山地→平原→丘陵'], answer:'C' },
-    { type:'choice', text:'改變地表風貌的力量可以分為內營力與外營力，下列何者屬於內營力作用？', options:['A. 河川堆積形成沙洲','B. 板塊擠壓形成高山','C. 海水侵蝕成海蝕洞','D. 河川侵蝕形成峽谷'], answer:'B' },
-    { type:'choice', text:'花東縱谷平原位在兩座山脈中間的，因四季不同的風情而吸引不少人前往，請問花東縱谷平原兩側的山脈分別為何？', options:['A. 雪山山脈、中央山脈','B. 中央山脈、海岸山脈','C. 阿里山山脈、中央山脈','D. 玉山山脈、中央山脈'], answer:'B' },
-    { type:'choice', text:'天氣和氣候最大的不同是：天氣是指短時間內的天氣狀態，而氣候則是大氣長時間的平均狀態。下列何者是針對氣候的敘述？', options:['A. 今天午後氣溫高，對流旺盛，可能會下西北雨','B. 東北季風增強，帶來的水氣讓明天北部出現局部陣雨','C. 西伯利亞高壓南下，未來三天都可能出現10℃以下低溫','D. 一般來說，臺灣的降雨集中在夏季，愈往中南部愈明顯'], answer:'D' },
-    { type:'choice', text:'臺灣某處海岸受到風力、波浪、潮汐和海流等營力的長期作用下，再加上河川輸沙銳減與地層下陷的影響，導致海岸地形有明顯的變遷。該處海岸在 10 年內最可能發生下列哪種變遷現象？', options:['A. 海階緩慢上升','B. 珊瑚礁海岸退縮','C. 沙灘面積逐漸縮小','D. 海蝕平臺逐年縮小'], answer:'C' },
-    {
-    type: 'fill',
-    text: '寒流來襲的季節為【　】季。',
-    answer: '冬'
-    },
-    {
-    type: 'fill2',
-    text: '臺灣常有豪雨發生的季節是 5、6 月的【　】季和 7～9 月的【　】季。',
-    answers: ['梅雨', '颱風']
-    },
-    {
-    type: 'fill2',
-    text: '「颱風」侵襲臺灣的季節為【　】季和【　】季。',
-    answers: ['夏', '秋']
-    },
-    { type:'choice', text:'從這張等高線地圖來看，可以推測這是哪一種地形呢？', options:['A. 平原','B. 盆地','C. 丘陵','D. 高山'], answer:'D' }
-];
-
-let currentQuestion = 0;
-
-function loadQuestion() {
-    const q = questions[currentQuestion];
-    document.getElementById('question-number').innerText = `問題 ${currentQuestion+1} / ${questions.length}`;
-    document.getElementById('question-text').innerText = q.text;
-
-    const choicesDiv = document.getElementById('choices');
-    const fillDiv = document.getElementById('fill-question');
-    const fill2Div = document.getElementById('fill2-question');
-    const imgDiv = document.getElementById('question-image');
-    const imgTag = document.getElementById('q-img');
-
-    imgDiv.classList.add('hidden');
-    imgTag.src = '';
-
-    if(q.type==='choice'){
-        fillDiv.classList.add('hidden');
-        fill2Div.classList.add('hidden');
-        choicesDiv.classList.remove('hidden');
-        choicesDiv.innerHTML = '';
-
-        // ★ 第 10 題顯示圖片
-        if(currentQuestion === 9){
-            imgDiv.classList.remove('hidden');
-            imgTag.src = 'img/unit2_10.png';
+    <meta charset="UTF-8">
+    <title>台灣地理闖關遊戲 - 拖曳題目</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-image: url("img/ans.png");
+            background-color: #f5f5f5;
         }
 
-        q.options.forEach(option=>{
-            const btn = document.createElement('button');
-            btn.innerText = option;
-            btn.onclick = ()=>checkChoice(option.charAt(0));
-            btn.className='choice-btn';
-            choicesDiv.appendChild(btn);
-        });
-    }else if(q.type==='fill'){
-        choicesDiv.classList.add('hidden');
-        fill2Div.classList.add('hidden');
-        fillDiv.classList.remove('hidden');
-        document.getElementById('fill-input').value = '';
-    }else if(q.type === 'fill2'){
-        choicesDiv.classList.add('hidden');
-        fillDiv.classList.add('hidden');
-        fill2Div.classList.remove('hidden');
+        .question-card {
+            background-color: #fff;
+            padding: 30px;
+            margin: 50px auto;
+            border-radius: 15px;
+            max-width: 900px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-        document.getElementById('fill2-input1').value = '';
-        document.getElementById('fill2-input2').value = '';
-    }
-}
+        h2 {
+            margin-top: 0;
+        }
 
-function checkFill(){
-    const userAns = document.getElementById('fill-input').value.trim();
-    const correctAns = questions[currentQuestion].answer;
+        .choices button {
+            display: block;
+            margin: 10px 0;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 10px;
+            border: none;
+            background-color: #f5eddc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-    if(userAns === correctAns){
-        alert('答對了！');
-        nextQuestion();
-    } else {
-        alert('答錯了，請再試一次！');
-    }
-}
+        .choices button:hover {
+            background-color: #e6dcc6;
+            transform: scale(1.05);
+        }
 
-function checkFill2(){
-    const ans1 = document.getElementById('fill2-input1').value.trim();
-    const ans2 = document.getElementById('fill2-input2').value.trim();
-    const correct = questions[currentQuestion].answers;
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
 
-    if(ans1 === correct[0] && ans2 === correct[1]){
-        alert('答對了！');
-        nextQuestion();
-    } else {
-        alert('答錯了，請再試一次！');
-    }
-}
+<body>
 
-// ===== 選擇題檢查 =====
-function checkChoice(ans){
-    if(ans === questions[currentQuestion].answer){
-        alert('答對了！');
-        nextQuestion();
-    } else{
-        alert('答錯了，請再試一次！');
-    }
-}
+    <div id="question-container" class="question-card">
+        <h2 id="question-number">問題 1 / 11</h2>
+        <p id="question-text">臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？</p>
 
-function nextQuestion(){
-    currentQuestion++;
-    if(currentQuestion < questions.length){
+        <!-- 題目圖片 -->
+        <div id="question-image" class="hidden" style="text-align:center; margin:20px 0;">
+            <img id="q-img" src="" alt="題目圖片" style="max-width:100%; height:auto;">
+        </div>
+
+        <div id="choices" class="choices"></div>
+
+        <!-- 填充題 -->
+        <div id="fill-question" class="hidden">
+            <input type="text" id="fill-input" placeholder="請輸入答案" style="font-size:20px; padding:10px; width:200px;">
+            <br><br>
+            <button onclick="checkFill()" style="font-size:18px; padding:10px 30px; border-radius:10px;">
+                確認
+            </button>
+        </div>
+
+        <!-- 雙填充題 -->
+        <div id="fill2-question" class="hidden">
+            <input type="text" id="fill2-input1" placeholder="第一個答案" style="font-size:20px; padding:10px; width:200px;">
+            <br><br>
+            <input type="text" id="fill2-input2" placeholder="第二個答案" style="font-size:20px; padding:10px; width:200px;">
+            <br><br>
+            <button onclick="checkFill2()" style="font-size:18px; padding:10px 30px; border-radius:10px;">
+                確認
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { type: 'choice', text: '臺灣地形複雜多樣，請問下列何種地形不會出現在臺灣？', options: ['A. 平原', 'B. 臺地', 'C. 盆地', 'D. 高原'], answer: 'D' },
+            { type: 'choice', text: '請依據地形高度由高至低，排列下列地形：「丘陵、平原、山地」。', options: ['A. 平原→丘陵→山地', 'B. 丘陵→山地→平原', 'C. 山地→丘陵→平原', 'D. 山地→平原→丘陵'], answer: 'C' },
+            { type: 'choice', text: '改變地表風貌的力量可以分為內營力與外營力，下列何者屬於內營力作用？', options: ['A. 河川堆積形成沙洲', 'B. 板塊擠壓形成高山', 'C. 海水侵蝕成海蝕洞', 'D. 河川侵蝕形成峽谷'], answer: 'B' },
+            { type: 'choice', text: '花東縱谷平原位在兩座山脈中間的，因四季不同的風情而吸引不少人前往，請問花東縱谷平原兩側的山脈分別為何？', options: ['A. 雪山山脈、中央山脈', 'B. 中央山脈、海岸山脈', 'C. 阿里山山脈、中央山脈', 'D. 玉山山脈、中央山脈'], answer: 'B' },
+            { type: 'choice', text: '天氣和氣候最大的不同是：天氣是指短時間內的天氣狀態，而氣候則是大氣長時間的平均狀態。下列何者是針對氣候的敘述？', options: ['A. 今天午後氣溫高，對流旺盛，可能會下西北雨', 'B. 東北季風增強，帶來的水氣讓明天北部出現局部陣雨', 'C. 西伯利亞高壓南下，未來三天都可能出現10℃以下低溫', 'D. 一般來說，臺灣的降雨集中在夏季，愈往中南部愈明顯'], answer: 'D' },
+            { type: 'choice', text: '臺灣某處海岸受到風力、波浪、潮汐和海流等營力的長期作用下，再加上河川輸沙銳減與地層下陷的影響，導致海岸地形有明顯的變遷。該處海岸在 10 年內最可能發生下列哪種變遷現象？', options: ['A. 海階緩慢上升', 'B. 珊瑚礁海岸退縮', 'C. 沙灘面積逐漸縮小', 'D. 海蝕平臺逐年縮小'], answer: 'C' },
+            {
+                type: 'fill',
+                text: '寒流來襲的季節為【　】季。',
+                answer: '冬'
+            },
+            {
+                type: 'fill2',
+                text: '臺灣常有豪雨發生的季節是 5、6 月的【　】季和 7～9 月的【　】季。',
+                answers: ['梅雨', '颱風']
+            },
+            {
+                type: 'fill2',
+                text: '「颱風」侵襲臺灣的季節為【　】季和【　】季。',
+                answers: ['夏', '秋']
+            },
+            { type: 'choice', text: '從這張等高線地圖來看，可以推測這是哪一種地形呢？', options: ['A. 平原', 'B. 盆地', 'C. 丘陵', 'D. 高山'], answer: 'D' }
+        ];
+
+        let currentQuestion = 0;
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-number').innerText = `問題 ${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+
+            const choicesDiv = document.getElementById('choices');
+            const fillDiv = document.getElementById('fill-question');
+            const fill2Div = document.getElementById('fill2-question');
+            const imgDiv = document.getElementById('question-image');
+            const imgTag = document.getElementById('q-img');
+
+            imgDiv.classList.add('hidden');
+            imgTag.src = '';
+
+            if (q.type === 'choice') {
+                fillDiv.classList.add('hidden');
+                fill2Div.classList.add('hidden');
+                choicesDiv.classList.remove('hidden');
+                choicesDiv.innerHTML = '';
+
+                // ★ 第 10 題顯示圖片
+                if (currentQuestion === 9) {
+                    imgDiv.classList.remove('hidden');
+                    imgTag.src = 'img/unit2_10.png';
+                }
+
+                q.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.innerText = option;
+                    btn.onclick = () => checkChoice(option.charAt(0));
+                    btn.className = 'choice-btn';
+                    choicesDiv.appendChild(btn);
+                });
+            } else if (q.type === 'fill') {
+                choicesDiv.classList.add('hidden');
+                fill2Div.classList.add('hidden');
+                fillDiv.classList.remove('hidden');
+                document.getElementById('fill-input').value = '';
+            } else if (q.type === 'fill2') {
+                choicesDiv.classList.add('hidden');
+                fillDiv.classList.add('hidden');
+                fill2Div.classList.remove('hidden');
+
+                document.getElementById('fill2-input1').value = '';
+                document.getElementById('fill2-input2').value = '';
+            }
+        }
+
+        function checkFill() {
+            const userAns = document.getElementById('fill-input').value.trim();
+            const correctAns = questions[currentQuestion].answer;
+
+            if (userAns === correctAns) {
+                alert('答對了！');
+                nextQuestion();
+            } else {
+                alert('答錯了，請再試一次！');
+            }
+        }
+
+        function checkFill2() {
+            const ans1 = document.getElementById('fill2-input1').value.trim();
+            const ans2 = document.getElementById('fill2-input2').value.trim();
+            const correct = questions[currentQuestion].answers;
+
+            if (ans1 === correct[0] && ans2 === correct[1]) {
+                alert('答對了！');
+                nextQuestion();
+            } else {
+                alert('答錯了，請再試一次！');
+            }
+        }
+
+        // ===== 選擇題檢查 =====
+        function checkChoice(ans) {
+            if (ans === questions[currentQuestion].answer) {
+                alert('答對了！');
+                nextQuestion();
+            } else {
+                alert('答錯了，請再試一次！');
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                alert('恭喜完成所有題目！');
+                location.href = 'unit.html';
+            }
+        }
+
+        // 初始載入
         loadQuestion();
-    } else{
-        alert('恭喜完成所有題目！');
-        location.href = 'unit.html';
-    }
-}
 
-// 初始載入
-loadQuestion();
-
-</script>
+    </script>
 </body>
+
 </html>
